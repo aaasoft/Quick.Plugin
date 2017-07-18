@@ -32,8 +32,9 @@ namespace Quick.Plugin
                 var assemblyName = Path.GetFileNameWithoutExtension(pluginFile);
                 var assembly = Assembly.Load(new AssemblyName(assemblyName));
                 var plugin = new PluginInfo();
+                plugin.Id = assembly.GetName().Name;
                 //读取插件名称
-                plugin.Name = assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? assembly.GetName().Name;
+                plugin.Name = assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? plugin.Id;
                 //读取依赖的程序集
                 plugin.Refrences = assembly
                     .GetReferencedAssemblies()
@@ -66,8 +67,13 @@ namespace Quick.Plugin
                 if (!isOrderChanged)
                     break;
             }
+            //创建Activator的实例
+            foreach (var pluginInfo in pluginInfoList)
+            {
+                pluginInfo.Activator = createActivatorInstance(pluginInfo.Id);
+            }
         }
-        
+
         /// <summary>
         /// 获取全部的插件
         /// </summary>
@@ -82,7 +88,7 @@ namespace Quick.Plugin
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public IPluginActivator GetActivator(string id)
+        private IPluginActivator createActivatorInstance(string id)
         {
             Assembly assembly = Assembly.Load(new AssemblyName(id));
             Type activatorType = assembly.GetTypes()
@@ -107,10 +113,6 @@ namespace Quick.Plugin
             foreach (var plugin in plugins)
             {
                 Console.Write(">");
-
-                if (plugin.Activator == null)
-                    plugin.Activator = GetActivator(plugin.Id);
-
                 if (plugin.Activator == null)
                     continue;
                 plugin.Activator.Start();
@@ -128,9 +130,6 @@ namespace Quick.Plugin
 
             foreach (var plugin in plugins)
             {
-                if (plugin.Activator == null)
-                    plugin.Activator = GetActivator(plugin.Id);
-
                 if (plugin.Activator == null)
                     continue;
                 Console.Write($"插件[{plugin}]");

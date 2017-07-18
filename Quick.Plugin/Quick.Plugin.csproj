@@ -7,6 +7,6 @@
     <Description>A simple libary for localize your program.</Description>
     <PackageProjectUrl>https://github.com/aaasoft/Quick.Plugin</PackageProjectUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/aaasoft/Quick.Plugin/master/LICENSE</PackageLicenseUrl>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 </Project>
