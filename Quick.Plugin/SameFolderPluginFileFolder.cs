@@ -12,7 +12,7 @@ namespace Quick.Plugin
         private DirectoryInfo dir;
         public SameFolderPluginFileFolder()
         {
-            dir = new DirectoryInfo(Path.GetDirectoryName(this.GetType().GetTypeInfo().Assembly.Location));
+            dir = new DirectoryInfo(Directory.GetCurrentDirectory());
             if (!dir.Exists)
                 throw new IOException($"Cann't found plugin folder[{dir.FullName}].");
         }
